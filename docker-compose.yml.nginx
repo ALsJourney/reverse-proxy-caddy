@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    networks:
+      - local_dev_network
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: phpmyadmin
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+      MYSQL_ROOT_PASSWORD: example
+    networks:
+      - local_dev_network
+
+  db:
+    image: mysql:5.7
+    container_name: db
+    environment:
+      MYSQL_ROOT_PASSWORD: example
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - local_dev_network
+
+  nodeapp:
+    build: ./nodeapp
+    container_name: nodeapp
+    networks:
+      - local_dev_network
+
+networks:
+  local_dev_network:
+    driver: bridge
+
+volumes:
+  db_data:

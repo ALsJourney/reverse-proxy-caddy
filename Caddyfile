@@ -1,0 +1,14 @@
+phpmyadmin.local {
+    reverse_proxy phpmyadmin:80
+    encode gzip
+}
+
+nodeapp.local {
+    reverse_proxy nodeapp:3000
+    encode gzip
+}
+
+# Optionally, redirect HTTP to HTTPS
+:80 {
+    redir https://{host}{uri}
+}
